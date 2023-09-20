@@ -1,5 +1,8 @@
 import mysql.connector as mysql
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 class MySQLConnector:
     """
@@ -21,8 +24,6 @@ class MySQLConnector:
                  PASSWORD=os.environ.get('DB_PASSWORD')):
         # Connect to the database
         try:
-            print(USER)
-            print(PASSWORD)
             self.db_connection = mysql.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD)
         except Exception as e:
             print("ERROR: Failed to connect to db:", e)

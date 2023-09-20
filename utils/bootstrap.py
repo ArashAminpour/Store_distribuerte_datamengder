@@ -1,8 +1,5 @@
-import sys
-sys.path.append('/Users/nicolas/Workspace/School/V2023/Big Data/Exercise 2/Store_distribuerte_datamengder')
-
 from main.db_handler import DatabaseHandler
-from queries import TABLES
+from utils.queries import TABLES
 
 def main():
     try:

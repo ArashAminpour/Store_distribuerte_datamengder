@@ -2,6 +2,9 @@
 from tabulate import tabulate
 from main.db_connectors import MySQLConnector
 from mysql.connector import errorcode, Error
+import pandas as pd
+from sqlalchemy import create_engine
+import os
 
 
 class DatabaseHandler:
@@ -32,6 +35,14 @@ class DatabaseHandler:
             query = "DROP TABLE %s"
             self.cursor.execute(query % table_name)
         self.cursor.execute("SET FOREIGN_KEY_CHECKS=1;")
+
+    def write_dataframe(self, dataframe: pd.DataFrame):
+        try:
+            engine = create_engine(f"mysql+mysqlconnector://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@tdt4225-10.idi.ntnu.no:3306/default_db")
+            dataframe.to_sql('user', con=engine, if_exists='append', index=False)
+            print("Dataframe written to database")
+        except Exception as e:
+            print("ERROR: Failed to write dataframe to database:", e)
 
     def insert_data(self, table_name):
         names = ['Bobby', 'Mc', 'McSmack', 'Board']
@@ -64,6 +75,10 @@ def main():
     try:
         program = DatabaseHandler()
         program.show_tables()
+        df = pd.DataFrame({'id':['sd','ab','cd'],'has_labels':[True,False,True]})
+        print(df)
+        program.write_dataframe(dataframe=df)
+        program.fetch_data("user")
     except Exception as e:
         print("ERROR: Failed to use database:", e)
     finally:
