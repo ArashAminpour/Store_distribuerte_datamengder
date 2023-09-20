@@ -1,23 +1,17 @@
-from __future__ import print_function
+import sys
+sys.path.append('/Users/nicolas/Workspace/School/V2023/Big Data/Exercise 2/Store_distribuerte_datamengder')
 
-import mysql.connector
-from mysql.connector import errorcode
-from tables import TABLES
+from main.db_handler import DatabaseHandler
+from queries import TABLES
 
-def drop_database(cursor, db_name='default_db'):
+def main():
     try:
-        cursor.execute(
-            "DROP DATABASE {}".format(db_name))
-        
-        print("Successfully dropped database: {}".format(db_name))
-    except mysql.connector.Error as err:
-        print("Failed dropping database: {}".format(err))
-        exit(1)
+        program = DatabaseHandler()
+        program.drop_tables(tables=TABLES)
+        program.connection.close_connection()
+    except Exception as e:
+        print("ERROR: Failed to use database:", e)
+
 
 if __name__ == '__main__':
-    cnx = mysql.connector.connect(user='root', password='pass')
-    cursor = cnx.cursor()
-    
-    db_name = 'default_db'
-
-    drop_database(cursor, db_name)
+    main()

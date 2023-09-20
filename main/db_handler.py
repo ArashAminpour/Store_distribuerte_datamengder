@@ -1,23 +1,37 @@
 #from DbConnector import DbConnector
 from tabulate import tabulate
-from DbConnector import DbConnector
+from main.db_connectors import MySQLConnector
+from mysql.connector import errorcode, Error
 
 
-class ExampleProgram:
-
+class DatabaseHandler:
     def __init__(self):
-        self.connection = DbConnector()
+        self.connection = MySQLConnector()
         self.db_connection = self.connection.db_connection
         self.cursor = self.connection.cursor
 
-    def create_table(self, table_name):
-        query = """CREATE TABLE IF NOT EXISTS %s (
-                   id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-                   name VARCHAR(30))
-                """
-        # This adds table_name to the %s variable and executes the query
-        self.cursor.execute(query % table_name)
-        self.db_connection.commit()
+    def create_tables(self, tables):
+        for table_name in tables:
+            table_description = tables[table_name]
+            try:
+                print("Creating table {}: ".format(table_name), end='')
+                self.cursor.execute(table_description)
+                self.db_connection.commit()
+            except Error as err:
+                if err.errno == errorcode.ER_TABLE_EXISTS_ERROR:
+                    print("already exists.")
+                else:
+                    print(err.msg)
+            else:
+                print("OK")
+
+    def drop_tables(self, tables):
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS=0;")
+        for table_name in tables:
+            print("Dropping table %s..." % table_name)
+            query = "DROP TABLE %s"
+            self.cursor.execute(query % table_name)
+        self.cursor.execute("SET FOREIGN_KEY_CHECKS=1;")
 
     def insert_data(self, table_name):
         names = ['Bobby', 'Mc', 'McSmack', 'Board']
@@ -39,11 +53,6 @@ class ExampleProgram:
         print(tabulate(rows, headers=self.cursor.column_names))
         return rows
 
-    def drop_table(self, table_name):
-        print("Dropping table %s..." % table_name)
-        query = "DROP TABLE %s"
-        self.cursor.execute(query % table_name)
-
     def show_tables(self):
         self.cursor.execute("SHOW TABLES")
         rows = self.cursor.fetchall()
@@ -53,12 +62,7 @@ class ExampleProgram:
 def main():
     program = None
     try:
-        program = ExampleProgram()
-        program.create_table(table_name="Person")
-        program.insert_data(table_name="Person")
-        _ = program.fetch_data(table_name="Person")
-        program.drop_table(table_name="Person")
-        # Check that the table is dropped
+        program = DatabaseHandler()
         program.show_tables()
     except Exception as e:
         print("ERROR: Failed to use database:", e)

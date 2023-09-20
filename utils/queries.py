@@ -2,7 +2,7 @@ DB_NAME = 'employees'
 
 TABLES = {}
 
-TABLES['users'] = '''
+TABLES['user'] = '''
     CREATE TABLE user (
         id VARCHAR(255) PRIMARY KEY,
         has_labels BOOLEAN
@@ -16,7 +16,7 @@ TABLES['activity'] = '''
         transportation_mode VARCHAR(255),
         start_date_time DATETIME,
         end_date_time DATETIME,
-        FOREIGN KEY (user_id) REFERENCES user(id)
+        FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
     );
 '''
 
@@ -29,6 +29,6 @@ TABLES['track_point'] = '''
         altitude INT,
         date_days DOUBLE,
         date_time DATETIME,
-        FOREIGN KEY (activity_id) REFERENCES Activity(id)
+        FOREIGN KEY (activity_id) REFERENCES activity(id) ON DELETE CASCADE
     );
 '''
