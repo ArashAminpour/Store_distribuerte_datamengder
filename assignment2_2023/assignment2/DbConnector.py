@@ -15,20 +15,23 @@ class DbConnector:
     PASSWORD = "test123" // The password you set for said user
     """
 
-    def __init__(self,
-                 HOST="tdt4225-10.idi.ntnu.no",
-                 DATABASE="o2",
-                 USER="gruppe10",
-                 PASSWORD="123",):
+    def __init__(
+        self,
+        HOST="tdt4225-10.idi.ntnu.no",
+        DATABASE="task1",
+        USER="gruppe10",
+        PASSWORD="123",
+    ):
         # Connect to the database
         try:
-            self.db_connection = mysql.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD, port=3306)
+            self.db_connection = mysql.connect(
+                host=HOST, database=DATABASE, user=USER, password=PASSWORD, port=3306
+            )
         except Exception as e:
             print("ERROR: Failed to connect to db:", e)
             import traceback
-            traceback.print_exc()
-    
 
+            traceback.print_exc()
 
         # Get the db cursor
         self.cursor = self.db_connection.cursor()
