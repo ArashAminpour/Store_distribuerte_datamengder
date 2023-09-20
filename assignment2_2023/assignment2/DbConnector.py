@@ -1,4 +1,5 @@
 import mysql.connector as mysql
+import os
 
 
 class DbConnector:
@@ -15,13 +16,13 @@ class DbConnector:
     """
 
     def __init__(self,
-                 HOST="tdt4225-xx.idi.ntnu.no",
-                 DATABASE="DATABASE_NAME",
-                 USER="TEST_USER",
-                 PASSWORD="test123"):
+                 HOST="tdt4225-10.idi.ntnu.no",
+                 DATABASE="default_db",
+                 USER=os.environ.get("DB_USER"),
+                 PASSWORD=os.environ.get("DB_PASSWORD")):
         # Connect to the database
         try:
-            self.db_connection = mysql.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD, port=3306)
+            self.db_connection = mysql.connect(host=HOST, database=DATABASE, user=USER, password=PASSWORD)
         except Exception as e:
             print("ERROR: Failed to connect to db:", e)
 
