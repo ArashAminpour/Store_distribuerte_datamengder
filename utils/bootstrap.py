@@ -1,7 +1,7 @@
 from main.db_handler import DatabaseHandler
 from utils.queries import TABLES
 
-def main():
+def bootstrap():
     try:
         program = DatabaseHandler()
         program.create_tables(tables=TABLES)
@@ -11,4 +11,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    bootstrap()

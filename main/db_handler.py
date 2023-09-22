@@ -36,11 +36,23 @@ class DatabaseHandler:
             self.cursor.execute(query % table_name)
         self.cursor.execute("SET FOREIGN_KEY_CHECKS=1;")
 
-    def write_dataframe(self, dataframe: pd.DataFrame):
+    def write_dataframe(self, dataframe: pd.DataFrame, table_name: str, chunk_size=5000):
         try:
             engine = create_engine(f"mysql+mysqlconnector://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@tdt4225-10.idi.ntnu.no:3306/default_db")
-            dataframe.to_sql('user', con=engine, if_exists='append', index=False)
-            print("Dataframe written to database")
+
+            # Calculate the number of chunks
+            num_chunks = (len(dataframe) - 1) // chunk_size + 1
+
+            for i in range(num_chunks):
+                # Split DataFrame into a chunk
+                chunk = dataframe[i * chunk_size: (i + 1) * chunk_size]
+
+                # Insert the chunk into the database
+                chunk.to_sql(table_name, con=engine, if_exists='append', index=False)
+                print(f"{table_name}: Inserted chunk {i + 1}/{num_chunks}")
+
+            print(f"{table_name}: Dataframe written to database in {num_chunks} chunks")
+
         except Exception as e:
             print("ERROR: Failed to write dataframe to database:", e)
 
@@ -77,7 +89,7 @@ def main():
         program.show_tables()
         df = pd.DataFrame({'id':['sd','ab','cd'],'has_labels':[True,False,True]})
         print(df)
-        program.write_dataframe(dataframe=df)
+        program.write_dataframe(dataframe=df, table_name="user")
         program.fetch_data("user")
     except Exception as e:
         print("ERROR: Failed to use database:", e)

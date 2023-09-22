@@ -11,7 +11,7 @@ TABLES['user'] = '''
 
 TABLES['activity'] = '''
     CREATE TABLE activity (
-        id INT PRIMARY KEY AUTO_INCREMENT,
+        id VARCHAR(255) PRIMARY KEY,
         user_id VARCHAR(255),
         transportation_mode VARCHAR(255),
         start_date_time DATETIME,
@@ -19,6 +19,17 @@ TABLES['activity'] = '''
         FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
     );
 '''
+
+# TABLES['activity'] = '''
+#     CREATE TABLE activity (
+#         id INT PRIMARY KEY AUTO_INCREMENT,
+#         user_id VARCHAR(255),
+#         transportation_mode VARCHAR(255),
+#         start_date_time DATETIME,
+#         end_date_time DATETIME,
+#         FOREIGN KEY (user_id) REFERENCES user(id) ON DELETE CASCADE
+#     );
+# '''
 
 TABLES['track_point'] = '''
     CREATE TABLE track_point (
