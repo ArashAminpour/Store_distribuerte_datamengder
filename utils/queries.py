@@ -34,7 +34,7 @@ TABLES['activity'] = '''
 TABLES['track_point'] = '''
     CREATE TABLE track_point (
         id INT PRIMARY KEY AUTO_INCREMENT,
-        activity_id INT,
+        activity_id VARCHAR(255),
         lat DOUBLE,
         lon DOUBLE,
         altitude INT,
