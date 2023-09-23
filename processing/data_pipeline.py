@@ -1,12 +1,13 @@
 import pandas as pd
 from processing.data_processing import *
+from config.constants import DATA_PATH
 
-def pipeline():
-    track_points_raw = get_track_points(DATA_PATH, process_track_points)
+def pipeline(data_path):
+    track_points_raw = get_track_points(data_path, process_track_points)
     track_points_df = clean_track_points(track_points_raw)
 
-    users_df = get_users(DATA_PATH)
-    labels_df = get_labels(DATA_PATH, get_users)
+    users_df = get_users(data_path)
+    labels_df = get_labels(data_path, get_users)
 
     removed_users = find_removed_users(track_points_df, users_df)
 
@@ -17,4 +18,4 @@ def pipeline():
     return users_table, activities_table, track_points_table
 
 if __name__ == '__main__':
-    pipeline()
+    pipeline(DATA_PATH)

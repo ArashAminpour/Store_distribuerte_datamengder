@@ -1,9 +1,13 @@
 from main.db_handler import DatabaseHandler
-from utils.queries import TABLES
 from processing.data_pipeline import pipeline
+from utils.queries import TABLES
+from tests.tests import *
+from config.constants import DATA_PATH
 
-def bootstrap():
-    user, activity, track_point = pipeline()
+def bootstrap(data_path):
+    check_unique_activities(data_path)
+    user, activity, track_point = pipeline(data_path)
+    run_tests(user, activity, track_point)
     try:
         program = DatabaseHandler()
         program.create_tables(tables=TABLES)
@@ -17,4 +21,4 @@ def bootstrap():
 
 
 if __name__ == '__main__':
-    bootstrap()
+    bootstrap(DATA_PATH)

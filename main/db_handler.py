@@ -6,7 +6,6 @@ import pandas as pd
 from sqlalchemy import create_engine
 import os
 
-
 class DatabaseHandler:
     def __init__(self):
         self.connection = MySQLConnector()

@@ -5,7 +5,6 @@ from processing.helpers import process_track_points, find_removed_users
 
 from collections.abc import Callable
 
-DATA_PATH = "/Users/nicolas/Workspace/School/V2023/Big Data/Exercise 2/Store_distribuerte_datamengder/dataset"
 MAX_ALLOWED_ROWS = 2506
 
 def get_track_points(data_path, process_func):
