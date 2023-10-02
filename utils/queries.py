@@ -1,5 +1,3 @@
-DB_NAME = 'employees'
-
 TABLES = {}
 
 TABLES['user'] = '''
