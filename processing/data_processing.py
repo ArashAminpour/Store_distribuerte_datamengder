@@ -177,7 +177,7 @@ def make_activity_df(track_points_df, labels_df):
 def make_track_point_df(track_points_df): 
     track_points_df["activity_id"] = track_points_df["activity"] + track_points_df["user"]
     result_df = track_points_df.drop(["activity", "user"], axis=1)
-    result_df = result_df.process_dataframe(result_df, haversine)
+    result_df = process_dataframe(result_df, haversine)
     return result_df
 
 # Pipeline
