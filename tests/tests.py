@@ -27,7 +27,7 @@ def check_unique_activities(data_path):
     try:
         assert len(results) == 0
     except AssertionError as e:
-        print(e)
+        print(f"WARNING: Error was found {e}")
         return results
 
 # Final checks
@@ -42,7 +42,7 @@ def test_duplicate_rows(df, columns_to_check):
         assert len(results) == 0
         print("No duplicate rows found")
     except AssertionError as e:
-        print(e)
+        print(f"WARNING: Error was found {e}")
         return results
 
 def test_rows_count(df, max_rows=2500):
@@ -54,9 +54,9 @@ def test_rows_count(df, max_rows=2500):
     
     try:
         assert len(results) == 0
-        print("No partition with more than {max_rows} rows found}")
+        print(f"No partition with more than {max_rows} rows found")
     except AssertionError as e:
-        print(e)
+        print(f"WARNING: Error was found {e}")
         return results
 
 def test_referential_integrity(df, df_ref, col, col_ref):
@@ -70,7 +70,7 @@ def test_referential_integrity(df, df_ref, col, col_ref):
         assert len(results) == 0
         print("No referential integrity errors found")
     except AssertionError as e:
-        print(e)
+        print(f"WARNING: Error was found {e}")
         return results
 
 def test_no_nulls(df, columns_to_check: list):
@@ -84,7 +84,7 @@ def test_no_nulls(df, columns_to_check: list):
         assert len(results) == 0
         print("No null values found")
     except AssertionError as e:
-        print(e)
+        print(f"WARNING: Error was found {e}")
         return results
     
 
