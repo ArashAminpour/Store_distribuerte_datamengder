@@ -39,14 +39,11 @@ class DatabaseHandler:
         try:
             engine = create_engine(f"mysql+mysqlconnector://{os.environ.get('DB_USER')}:{os.environ.get('DB_PASSWORD')}@tdt4225-10.idi.ntnu.no:3306/default_db")
 
-            # Calculate the number of chunks
             num_chunks = (len(dataframe) - 1) // chunk_size + 1
 
             for i in range(num_chunks):
-                # Split DataFrame into a chunk
                 chunk = dataframe[i * chunk_size: (i + 1) * chunk_size]
 
-                # Insert the chunk into the database
                 chunk.to_sql(table_name, con=engine, if_exists='append', index=False)
                 print(f"{table_name}: Inserted chunk {i + 1}/{num_chunks}")
 

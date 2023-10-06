@@ -4,19 +4,17 @@ import os
 # Check file structure
 def check_unique_activities(data_path):
     """
-        Check if all the values in the activity column are unique for each directory.
+        Check if all the values in the activity directory are unique for each user.
     """
     data_path = os.path.join(data_path, "Data")
     lists_by_directory = {}
 
-    # Format the directory name to have leading zeros if needed
     for i in range(182):
         directory_name = f"{i:03d}"
 
         files_in_directory = os.listdir(os.path.join(data_path, directory_name, "Trajectory"))
         lists_by_directory[directory_name] = files_in_directory
 
-    # Check if all values in each list are unique
     non_unique_dirs = []
     for directory_name, file_list in lists_by_directory.items():
         if len(file_list) != len(set(file_list)):
@@ -27,10 +25,9 @@ def check_unique_activities(data_path):
     try:
         assert len(results) == 0
     except AssertionError as e:
-        print(e)
+        print(f"WARNING: Error was found {e}")
         return results
 
-# Final checks
 def test_duplicate_rows(df, columns_to_check):
     """
         Check if there are any duplicate rows in the dataframe df for the columns_to_check.
@@ -42,7 +39,7 @@ def test_duplicate_rows(df, columns_to_check):
         assert len(results) == 0
         print("No duplicate rows found")
     except AssertionError as e:
-        print(e)
+        print(f"WARNING: Error was found {e}")
         return results
 
 def test_rows_count(df, max_rows=2500):
@@ -54,9 +51,9 @@ def test_rows_count(df, max_rows=2500):
     
     try:
         assert len(results) == 0
-        print("No partition with more than {max_rows} rows found}")
+        print(f"No partition with more than {max_rows} rows found")
     except AssertionError as e:
-        print(e)
+        print(f"WARNING: Error was found {e}")
         return results
 
 def test_referential_integrity(df, df_ref, col, col_ref):
@@ -70,7 +67,7 @@ def test_referential_integrity(df, df_ref, col, col_ref):
         assert len(results) == 0
         print("No referential integrity errors found")
     except AssertionError as e:
-        print(e)
+        print(f"WARNING: Error was found {e}")
         return results
 
 def test_no_nulls(df, columns_to_check: list):
@@ -84,7 +81,7 @@ def test_no_nulls(df, columns_to_check: list):
         assert len(results) == 0
         print("No null values found")
     except AssertionError as e:
-        print(e)
+        print(f"WARNING: Error was found {e}")
         return results
     
 
