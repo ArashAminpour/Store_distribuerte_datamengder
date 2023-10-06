@@ -129,30 +129,27 @@ def find_start_end(track_points_df):
 
     return result_df
 
-def process_dataframe(df: pd.DataFrame, distance_func, std_multiplier=3):
-    # Group by 'activity_id' and use shift to get the next record's lat and lon
-    df = df.drop_duplicates(keep='first').copy()
+def process_dataframe(input_df: pd.DataFrame, distance_func, std_multiplier=3):
+    df = input_df.copy()
+    df = df.drop_duplicates(subset=['activity_id', 'date_time'], keep='last')
+    df.set_index(['activity_id','date_time'], inplace=True)
     df['prev_lat'] = df.groupby('activity_id')['lat'].shift(1)
     df['prev_lon'] = df.groupby('activity_id')['lon'].shift(1)
 
-    # Calculate distance to next record using haversine formula
     df['distance_to_prev'] = df.apply(lambda row: distance_func(row['lon'], row['lat'], row['prev_lon'], row['prev_lat']), axis=1)
 
-    # Drop helper columns if needed
     df.drop(columns=['prev_lat', 'prev_lon'], inplace=True)
 
-    # Calculate the mean and standard deviation of distance_to_prev for each activity_id
     df['mean_distance'] = df.groupby('activity_id')['distance_to_prev'].transform('mean')
     df['std_distance'] = df.groupby('activity_id')['distance_to_prev'].transform('std')
 
-    # Filter rows where distance_to_prev is within 2 standard deviations of the mean
     filtered_df = df[
         (df['distance_to_prev'] >= (df['mean_distance'] - std_multiplier * df['std_distance'])) &
         (df['distance_to_prev'] <= (df['mean_distance'] + std_multiplier * df['std_distance']))
     ]
 
-    # Drop the helper columns
     filtered_df.drop(columns=['mean_distance', 'std_distance', 'distance_to_prev'], inplace=True)
+    filtered_df.reset_index(inplace=True)
 
     return filtered_df
 
@@ -176,10 +173,6 @@ def make_activity_df(track_points_df, labels_df):
 
 def make_track_point_df(track_points_df): 
     track_points_df["activity_id"] = track_points_df["activity"] + track_points_df["user"]
-    result_df = track_points_df.drop(["activity", "user"], axis=1)
-    result_df = process_dataframe(result_df, haversine)
+    int_df = track_points_df.drop(["activity", "user"], axis=1)
+    result_df = process_dataframe(int_df, haversine)
     return result_df
-
-# Pipeline
-
-# Using Pandas Pipe, write a pipeline chaining get_trajectories and transform_data

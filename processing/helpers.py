@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 def process_track_points(file_path, user, activity, max_allowed_rows: int = 2506):
     """
